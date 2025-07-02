@@ -75,7 +75,7 @@ inputs:
   pr_title:
     description: 'Title for pull requests'
     required: false
-    default: 'GT Translate: Translation updates for ${{ github.ref_name }} (${{ github.sha }})'
+    default: '[ci] GT Translate: ${{ github.ref_name }} ${{ github.event.head_commit.message }}'
   pr_body:
     description: 'Body for pull requests'
     required: false

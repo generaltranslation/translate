@@ -31748,8 +31748,17 @@ async function run() {
         const version = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('version');
         // PR inputs
         const prBranch = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('pr_branch');
-        const prTitle = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('pr_title');
+        let prTitle = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('pr_title');
         const prBody = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('pr_body');
+        // Get commit message and truncate if needed
+        const commitMessage = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.head_commit?.message || '';
+        const truncatedMessage = commitMessage.length > 50
+            ? commitMessage.substring(0, 47) + '...'
+            : commitMessage;
+        // Replace placeholder in PR title with truncated commit message
+        if (prTitle.includes('${{ github.event.head_commit.message }}')) {
+            prTitle = prTitle.replace('${{ github.event.head_commit.message }}', truncatedMessage);
+        }
         // Set GT environment variables
         if (gtApiKey) {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.exportVariable('GT_API_KEY', gtApiKey);
