@@ -1,52 +1,58 @@
-# Locadex Action
+# GT Translate Action
 
-GitHub Action for running Locadex i18n automation on your project.
+GitHub Action for running gtx-cli translate automation on your project.
 
 ## Usage
 
 ```yaml
-name: Locadex i18n
+name: GT Translate
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
-  i18n:
+  translate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: generaltranslation/locadex-action@v1
+      - uses: generaltranslation/translate-action@v0
         with:
-          api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           gt_api_key: ${{ secrets.GT_API_KEY }}
           gt_project_id: ${{ secrets.GT_PROJECT_ID }}
-          pr_branch: 'locadex/${{ github.ref_name }}'
-          pr_title: 'Locadex: Continuous i18n for ${{ github.ref_name }}'
+          config: 'gt.config.json'
+          locales: 'en fr es de'
+          default_language: 'en'
+          inline: true
+          pr_branch: 'gt-translate/${{ github.ref_name }}'
+          pr_title: 'GT Translate: Translation updates for ${{ github.ref_name }} (${{ github.sha }})'
 ```
 
 ## Inputs
 
-| Input            | Description                                                 | Required | Default                                               |
-| ---------------- | ----------------------------------------------------------- | -------- | ----------------------------------------------------- |
-| `api_key`        | Locadex API key                                             | ✅       | -                                                     |
-| `gt_api_key`     | General Translation API key                                 | ❌       | -                                                     |
-| `gt_project_id`  | General Translation project ID                              | ❌       | -                                                     |
-| `batch_size`     | File batch size                                             | ❌       | -                                                     |
-| `max_concurrent` | Max number of concurrent agents                             | ❌       | -                                                     |
-| `no_telemetry`   | Disable telemetry                                           | ❌       | `false`                                               |
-| `verbose`        | Enable verbose output                                       | ❌       | `false`                                               |
-| `debug`          | Enable debug output                                         | ❌       | `false`                                               |
-| `match_files`    | Comma-separated list of glob patterns to match source files | ❌       | -                                                     |
-| `extensions`     | Comma-separated list of file extensions to match            | ❌       | -                                                     |
-| `github_token`   | GitHub token for creating pull requests                     | ❌       | `${{ github.token }}`                                 |
-| `app_directory`  | Relative path to the app (Next.js, React, etc.)             | ❌       | -                                                     |
-| `version`        | Locadex version to use                                      | ❌       | `latest`                                              |
-| `pr_branch`      | Branch name for pull requests                               | ❌       | `locadex/${{ github.ref_name }}`                      |
-| `pr_title`       | Title for pull requests                                     | ❌       | `Locadex: Continuous i18n for ${{ github.ref_name }}` |
-| `pr_body`        | Body for pull requests                                      | ❌       | (see action.yml)                                      |
+| Input                               | Description                                               | Required | Default                                                                            |
+| ----------------------------------- | --------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------- |
+| `gt_api_key`                        | API key for General Translation cloud service             | ✅       | -                                                                                  |
+| `gt_project_id`                     | Project ID for the translation service                    | ✅       | -                                                                                  |
+| `config`                            | Filepath to config file, by default gt.config.json        | ❌       | -                                                                                  |
+| `version_id`                        | Version ID for the translation service                    | ❌       | -                                                                                  |
+| `tsconfig`                          | Path to jsconfig or tsconfig file                         | ❌       | -                                                                                  |
+| `dictionary`                        | Path to dictionary file                                   | ❌       | -                                                                                  |
+| `src`                               | Filepath to directory containing the app source code      | ❌       | -                                                                                  |
+| `default_language`                  | Default locale (e.g., en)                                 | ❌       | -                                                                                  |
+| `locales`                           | Space-separated list of locales (e.g., en fr es)          | ❌       | -                                                                                  |
+| `inline`                            | Include inline <T> tags in addition to dictionary file    | ❌       | `true`                                                                             |
+| `ignore_errors`                     | Ignore errors encountered while scanning for <T> tags     | ❌       | `false`                                                                            |
+| `dry_run`                           | Dry run, does not send updates to General Translation API | ❌       | `false`                                                                            |
+| `timeout`                           | Timeout in seconds for waiting for updates to be deployed | ❌       | -                                                                                  |
+| `experimental_localize_static_urls` | Run script to localize all urls in content files          | ❌       | `false`                                                                            |
+| `experimental_hide_default_locale`  | Hide the default locale from the path when localizing     | ❌       | `false`                                                                            |
+| `experimental_flatten_json_files`   | Flatten json files into a single file                     | ❌       | `false`                                                                            |
+| `github_token`                      | GitHub token for creating pull requests                   | ❌       | `${{ github.token }}`                                                              |
+| `version`                           | gtx-cli version to use                                    | ❌       | `latest`                                                                           |
+| `pr_branch`                         | Branch name for pull requests                             | ❌       | `gt-translate/${{ github.ref_name }}`                                              |
+| `pr_title`                          | Title for pull requests                                   | ❌       | `GT Translate: Translation updates for ${{ github.ref_name }} (${{ github.sha }})` |
+| `pr_body`                           | Body for pull requests                                    | ❌       | (see action.yml)                                                                   |
 
 ## Development
 

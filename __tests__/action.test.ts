@@ -15,97 +15,111 @@ describe('GitHub Action', () => {
     mockCore.getBooleanInput.mockReturnValue(false);
   });
 
-  it('should get required API key input', async () => {
+  it('should get GT API key input and set environment variables', async () => {
     mockCore.getInput.mockImplementation((name) => {
-      if (name === 'api_key') return 'test-api-key';
+      if (name === 'gt_api_key') return 'test-gt-api-key';
+      if (name === 'gt_project_id') return 'test-project-id';
       return '';
     });
 
     const { run } = await import('../src/action');
     await run();
 
-    expect(mockCore.getInput).toHaveBeenCalledWith('api_key', {
-      required: true,
-    });
+    expect(mockCore.getInput).toHaveBeenCalledWith('gt_api_key');
+    expect(mockCore.getInput).toHaveBeenCalledWith('gt_project_id');
     expect(mockCore.exportVariable).toHaveBeenCalledWith(
-      'ANTHROPIC_API_KEY',
-      'test-api-key'
+      'GT_API_KEY',
+      'test-gt-api-key'
+    );
+    expect(mockCore.exportVariable).toHaveBeenCalledWith(
+      'GT_PROJECT_ID',
+      'test-project-id'
     );
   });
 
-  it('should build basic command with npx locadex i18n', async () => {
+  it('should build basic command with gtx-cli translate', async () => {
     mockCore.getInput.mockImplementation((name) => {
-      if (name === 'api_key') return 'test-api-key';
+      if (name === 'gt_api_key') return 'test-gt-api-key';
       return '';
     });
 
     const { run } = await import('../src/action');
     await run();
 
-    expect(mockExec).toHaveBeenCalledWith('npx', ['locadex', 'i18n']);
+    expect(mockExec).toHaveBeenCalledWith('npm', [
+      'install',
+      '-g',
+      'gtx-cli@latest',
+    ]);
+    expect(mockExec).toHaveBeenCalledWith('gtx-cli', [
+      'translate',
+      '--api-key',
+      'test-gt-api-key',
+    ]);
   });
 
-  it('should add verbose flag when verbose is true', async () => {
+  it('should add config flag when config is provided', async () => {
     mockCore.getInput.mockImplementation((name) => {
-      if (name === 'api_key') return 'test-api-key';
+      if (name === 'gt_api_key') return 'test-gt-api-key';
+      if (name === 'config') return 'custom.config.json';
+      return '';
+    });
+
+    const { run } = await import('../src/action');
+    await run();
+
+    expect(mockExec).toHaveBeenCalledWith('gtx-cli', [
+      'translate',
+      '--config',
+      'custom.config.json',
+      '--api-key',
+      'test-gt-api-key',
+    ]);
+  });
+
+  it('should add inline flag when inline is true', async () => {
+    mockCore.getInput.mockImplementation((name) => {
+      if (name === 'gt_api_key') return 'test-gt-api-key';
       return '';
     });
     mockCore.getBooleanInput.mockImplementation((name) => {
-      if (name === 'verbose') return true;
+      if (name === 'inline') return true;
       return false;
     });
 
     const { run } = await import('../src/action');
     await run();
 
-    expect(mockExec).toHaveBeenCalledWith('npx', [
-      'locadex',
-      'i18n',
-      '--verbose',
+    expect(mockExec).toHaveBeenCalledWith('gtx-cli', [
+      'translate',
+      '--api-key',
+      'test-gt-api-key',
+      '--inline',
     ]);
   });
 
-  it('should add debug flag when debug is true', async () => {
+  it('should add locales when provided', async () => {
     mockCore.getInput.mockImplementation((name) => {
-      if (name === 'api_key') return 'test-api-key';
-      return '';
-    });
-    mockCore.getBooleanInput.mockImplementation((name) => {
-      if (name === 'debug') return true;
-      return false;
-    });
-
-    const { run } = await import('../src/action');
-    await run();
-
-    expect(mockExec).toHaveBeenCalledWith('npx', [
-      'locadex',
-      'i18n',
-      '--debug',
-    ]);
-  });
-
-  it('should add batch size when provided', async () => {
-    mockCore.getInput.mockImplementation((name) => {
-      if (name === 'api_key') return 'test-api-key';
-      if (name === 'batch_size') return '10';
+      if (name === 'gt_api_key') return 'test-gt-api-key';
+      if (name === 'locales') return 'en fr es';
       return '';
     });
 
     const { run } = await import('../src/action');
     await run();
 
-    expect(mockExec).toHaveBeenCalledWith('npx', [
-      'locadex',
-      'i18n',
-      '--batch-size',
-      '10',
+    expect(mockExec).toHaveBeenCalledWith('gtx-cli', [
+      'translate',
+      '--api-key',
+      'test-gt-api-key',
+      '--locales',
+      'en fr es',
     ]);
   });
 
   it('should handle errors and set failed status', async () => {
     mockCore.getInput.mockImplementation((name) => {
-      if (name === 'api_key') return 'test-api-key';
+      if (name === 'gt_api_key') return 'test-gt-api-key';
       return '';
     });
     mockExec.mockRejectedValue(new Error('Command failed'));

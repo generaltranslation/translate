@@ -5,32 +5,40 @@ import * as github from '@actions/github';
 import { exec } from '@actions/exec';
 
 export async function run(): Promise<void> {
-  core.info('Locadex i18n action started');
+  core.info('GT Translate action started');
   try {
     // Get inputs
-    const apiKey = core.getInput('api_key', { required: true });
-    const batchSize = core.getInput('batch_size');
-    const maxConcurrent = core.getInput('max_concurrent');
-    const verbose = core.getBooleanInput('verbose');
-    const debug = core.getBooleanInput('debug');
-    const matchFiles = core.getInput('match_files');
-    const noTelemetry = core.getBooleanInput('no_telemetry');
-    const noTranslate = core.getBooleanInput('no_translate');
-    const githubToken = core.getInput('github_token');
-    const appDirectory = core.getInput('app_directory');
-    const version = core.getInput('version');
     const gtApiKey = core.getInput('gt_api_key');
     const gtProjectId = core.getInput('gt_project_id');
-    const formatCmd = core.getInput('format_cmd');
+    const config = core.getInput('config');
+    const versionId = core.getInput('version_id');
+    const tsconfig = core.getInput('tsconfig');
+    const dictionary = core.getInput('dictionary');
+    const src = core.getInput('src');
+    const defaultLanguage = core.getInput('default_language');
+    const locales = core.getInput('locales');
+    const inline = core.getBooleanInput('inline');
+    const ignoreErrors = core.getBooleanInput('ignore_errors');
+    const dryRun = core.getBooleanInput('dry_run');
+    const timeout = core.getInput('timeout');
+    const experimentalLocalizeStaticUrls = core.getBooleanInput(
+      'experimental_localize_static_urls'
+    );
+    const experimentalHideDefaultLocale = core.getBooleanInput(
+      'experimental_hide_default_locale'
+    );
+    const experimentalFlattenJsonFiles = core.getBooleanInput(
+      'experimental_flatten_json_files'
+    );
+    const githubToken = core.getInput('github_token');
+    const version = core.getInput('version');
 
     // PR inputs
     const prBranch = core.getInput('pr_branch');
     const prTitle = core.getInput('pr_title');
     const prBody = core.getInput('pr_body');
 
-    // Set API key as environment variable
-    core.exportVariable('ANTHROPIC_API_KEY', apiKey);
-
+    // Set GT environment variables
     if (gtApiKey) {
       core.exportVariable('GT_API_KEY', gtApiKey);
     }
@@ -39,45 +47,46 @@ export async function run(): Promise<void> {
     }
 
     // Build command arguments
-    const installArgs = ['npm', 'install', '-g', `locadex@${version}`];
-    core.info(`Installing locadex@${version}...`);
+    const installArgs = [
+      'npm',
+      'install',
+      '-g',
+      `gtx-cli@${version || 'latest'}`,
+    ];
+    core.info(`Installing gtx-cli@${version || 'latest'}...`);
     await exec(installArgs[0], installArgs.slice(1));
 
-    // Then run the command without npx
-    const args = ['locadex', 'i18n'];
+    // Then run the gtx-cli translate command
+    const args = ['gtx-cli', 'translate'];
 
-    if (verbose) args.push('--verbose');
-    if (debug) args.push('--debug');
-    if (noTelemetry) {
-      args.push('--no-telemetry');
-    }
-    if (noTranslate) {
-      args.push('--no-translate');
-    }
-    if (formatCmd) {
-      args.push('--format-cmd', formatCmd);
-    }
-    if (batchSize) {
-      args.push('--batch-size', batchSize);
-    }
-    if (maxConcurrent) {
-      args.push('--concurrency', maxConcurrent);
-    }
-    if (matchFiles) {
-      args.push('--match-files', matchFiles);
-    }
-    if (appDirectory) {
-      args.push('--app-dir', appDirectory);
-    }
+    if (config) args.push('--config', config);
+    if (gtApiKey) args.push('--api-key', gtApiKey);
+    if (gtProjectId) args.push('--project-id', gtProjectId);
+    if (versionId) args.push('--version-id', versionId);
+    if (tsconfig) args.push('--tsconfig', tsconfig);
+    if (dictionary) args.push('--dictionary', dictionary);
+    if (src) args.push('--src', src);
+    if (defaultLanguage) args.push('--default-language', defaultLanguage);
+    if (locales) args.push('--locales', locales);
+    if (inline) args.push('--inline');
+    if (ignoreErrors) args.push('--ignore-errors');
+    if (dryRun) args.push('--dry-run');
+    if (timeout) args.push('--timeout', timeout);
+    if (experimentalLocalizeStaticUrls)
+      args.push('--experimental-localize-static-urls');
+    if (experimentalHideDefaultLocale)
+      args.push('--experimental-hide-default-locale');
+    if (experimentalFlattenJsonFiles)
+      args.push('--experimental-flatten-json-files');
 
     core.info(`Running command: ${args.join(' ')}`);
 
     // Execute the command
     const code = await exec(args[0], args.slice(1));
     if (code !== 0) {
-      throw new Error(`Locadex failed with code ${code}`);
+      throw new Error(`GT Translate failed with code ${code}`);
     } else {
-      core.info('Locadex i18n action completed successfully');
+      core.info('GT Translate action completed successfully');
     }
 
     await createPR(githubToken, prBranch, prTitle, prBody);
@@ -185,7 +194,11 @@ async function createPR(
 
   await exec('git', ['checkout', '-b', availableBranchName]);
   await exec('git', ['add', '.']);
-  await exec('git', ['commit', '-m', 'chore(locadex): update code']);
+  await exec('git', [
+    'commit',
+    '-m',
+    'chore(gt-translate): update translations',
+  ]);
   await exec('git', ['push', 'origin', availableBranchName]);
 
   const prAlreadyExists = await prExists(

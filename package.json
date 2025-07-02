@@ -1,7 +1,7 @@
 {
-  "name": "@generaltranslation/locadex-action",
-  "version": "0.1.8",
-  "description": "GitHub Action for Locadex i18n automation",
+  "name": "@generaltranslation/translate-action",
+  "version": "0.0.0",
+  "description": "GitHub Action for continuous translation",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
