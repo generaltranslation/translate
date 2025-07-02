@@ -1,0 +1,87 @@
+name: 'Locadex'
+description: 'Github Action integration for Locadex'
+author: 'generaltranslation'
+branding:
+  icon: 'globe'
+  color: 'blue'
+
+inputs:
+  api_key:
+    description: 'Locadex API key'
+    required: true
+  gt_api_key:
+    description: 'General Translation API key'
+    required: false
+  gt_project_id:
+    description: 'General Translation project ID'
+    required: false
+  batch_size:
+    description: 'File batch size'
+    required: false
+  max_concurrent:
+    description: 'Max number of concurrent agents'
+    required: false
+  no_telemetry:
+    description: 'Disable telemetry'
+    required: false
+    default: 'false'
+  verbose:
+    description: 'Enable verbose output'
+    required: false
+    default: 'false'
+  debug:
+    description: 'Enable debug output'
+    required: false
+    default: 'false'
+  match_files:
+    description: 'Comma-separated list of glob patterns to match source files'
+    required: false
+  github_token:
+    description: 'GitHub token for creating pull requests'
+    required: false
+    default: ${{ github.token }}
+  app_directory:
+    description: 'Relative path to the app (Next.js, React, etc.)'
+    required: false
+  version:
+    description: 'Locadex version to use'
+    required: false
+    default: '0.1.17'
+  pr_branch:
+    description: 'Branch name for pull requests'
+    required: false
+    default: 'locadex/${{ github.ref_name }}'
+  pr_title:
+    description: 'Title for pull requests'
+    required: false
+    default: 'Locadex: Continuous i18n for ${{ github.ref_name }}'
+  pr_body:
+    description: 'Body for pull requests'
+    required: false
+    default: |
+      ## 🌍 Locadex i18n Update
+
+      This is an **automated pull request** created by [Locadex](https://generaltranslation.com/docs/locadex).
+
+      ### What's included
+      - Internationalized files that were modified in the base branch
+      - Translation updates based on your latest changes
+
+      ### Next steps
+      1. Review the code for accuracy
+      2. Test the changes in your development environment  
+      3. Merge when ready to deploy internationalized content
+
+      ---
+      *Generated automatically by Locadex continuous i18n*
+  no_translate:
+    description: 'Disable automatic translation after updating files'
+    required: false
+    default: 'false'
+  format_cmd:
+    description: 'Optional formatting command to run after updating files'
+    required: false
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
