@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: generaltranslation/translate-action@v0
+      - uses: generaltranslation/translate@v0
         with:
           gt_api_key: ${{ secrets.GT_API_KEY }}
           gt_project_id: ${{ secrets.GT_PROJECT_ID }}
