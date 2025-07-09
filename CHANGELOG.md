@@ -1,5 +1,11 @@
 # @generaltranslation/translate-action
 
+## 0.0.4
+
+### Patch Changes
+
+- [#6](https://github.com/generaltranslation/translate/pull/6) [`ccd3545`](https://github.com/generaltranslation/translate/commit/ccd354575f639b5bc5fd3b1bcc28e3df9bd5d0f8) Thanks [@ErnestM1234](https://github.com/ErnestM1234)! - fix: remove commit message truncation
+
 ## 0.0.3
 
 ### Patch Changes
