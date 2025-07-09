@@ -182,10 +182,19 @@ async function createPR(
   prTitle: string,
   prBody: string
 ): Promise<void> {
-  // Check for changes using git status
+  // Check for changes using git status (both staged and unstaged)
   let hasChanges = false;
   try {
+    // Check for unstaged changes
     await exec('git', ['diff', '--quiet']);
+    // Check for untracked files
+    await exec('git', [
+      'ls-files',
+      '--others',
+      '--exclude-standard',
+      '--error-unmatch',
+      '.',
+    ]);
   } catch {
     hasChanges = true;
   }
@@ -211,6 +220,7 @@ async function createPR(
   await exec('git', ['add', '.']);
   await exec('git', [
     'commit',
+    '-s',
     '-m',
     'chore(gt-translate): update translations',
   ]);

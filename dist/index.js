@@ -31885,10 +31885,19 @@ async function prExists(octokit, owner, repo, head) {
     }
 }
 async function createPR(githubToken, prBranch, prTitle, prBody) {
-    // Check for changes using git status
+    // Check for changes using git status (both staged and unstaged)
     let hasChanges = false;
     try {
+        // Check for unstaged changes
         await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)('git', ['diff', '--quiet']);
+        // Check for untracked files
+        await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)('git', [
+            'ls-files',
+            '--others',
+            '--exclude-standard',
+            '--error-unmatch',
+            '.',
+        ]);
     }
     catch {
         hasChanges = true;
@@ -31910,6 +31919,7 @@ async function createPR(githubToken, prBranch, prTitle, prBody) {
     await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)('git', ['add', '.']);
     await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)('git', [
         'commit',
+        '-s',
         '-m',
         'chore(gt-translate): update translations',
     ]);
