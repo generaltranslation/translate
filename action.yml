@@ -75,7 +75,7 @@ inputs:
   pr_title:
     description: 'Title for pull requests'
     required: false
-    default: '[ci] translate'
+    default: '[ci] translation'
   pr_body:
     description: 'Body for pull requests'
     required: false
