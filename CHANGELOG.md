@@ -1,5 +1,11 @@
 # @generaltranslation/translate-action
 
+## 0.0.3
+
+### Patch Changes
+
+- [#4](https://github.com/generaltranslation/translate/pull/4) [`d09e2cc`](https://github.com/generaltranslation/translate/commit/d09e2ccdd99f733d4f635f85df65f246b62cc392) Thanks [@ErnestM1234](https://github.com/ErnestM1234)! - fix: detect untracked files
+
 ## 0.0.2
 
 ### Patch Changes
