@@ -2,7 +2,7 @@
 
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import { exec } from '@actions/exec';
+import { exec, getExecOutput } from '@actions/exec';
 
 export async function run(): Promise<void> {
   core.info('GT Translate action started');
@@ -169,19 +169,28 @@ async function createPR(
 ): Promise<void> {
   // Check for changes using git status (both staged and unstaged)
   let hasChanges = false;
+
+  // Check for unstaged changes
   try {
-    // Check for unstaged changes
     await exec('git', ['diff', '--quiet']);
-    // Check for untracked files
-    await exec('git', [
-      'ls-files',
-      '--others',
-      '--exclude-standard',
-      '--error-unmatch',
-      '.',
-    ]);
   } catch {
     hasChanges = true;
+  }
+
+  // Check for untracked files (only if no changes found yet)
+  if (!hasChanges) {
+    try {
+      const { stdout } = await getExecOutput(
+        'git',
+        ['ls-files', '--others', '--exclude-standard'],
+        { silent: true }
+      );
+      if (stdout.trim()) {
+        hasChanges = true;
+      }
+    } catch {
+      // If git ls-files fails, assume no untracked files
+    }
   }
 
   if (!hasChanges) {
