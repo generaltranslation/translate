@@ -1,8 +1,14 @@
 # GT Translate Action
 
 GitHub Action for running gtx-cli translate automation on your project.
+Each time you merge a PR into main, a new PR will be generate with new translations.
 
 ## Usage
+
+Navigate to Settings > Security > Secrets and Variables > Actions.
+Under Repository Secrets add `GT_PROJECT_ID` and `GT_API_KEY` from your [dashboard](https://dash.generaltranslation.com/project/api-keys).
+
+Finally, Create a new file at `.github/workflows/translate.yaml` and paste the following code into it:
 
 ```yaml
 name: GT Translate
@@ -25,8 +31,6 @@ jobs:
           gt_api_key: ${{ secrets.GT_API_KEY }}
           gt_project_id: ${{ secrets.GT_PROJECT_ID }}
           config: 'gt.config.json'
-          locales: 'en fr es de'
-          default_language: 'en'
           inline: true
           pr_branch: 'gt-translate/${{ github.ref_name }}'
           pr_title: 'GT Translate: Translation updates for ${{ github.ref_name }} (${{ github.event.head_commit.message }})'
