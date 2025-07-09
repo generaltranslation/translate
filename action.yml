@@ -75,7 +75,7 @@ inputs:
   pr_title:
     description: 'Title for pull requests'
     required: false
-    default: '[ci] GT Translate: ${{ github.ref_name }} ${{ github.event.head_commit.message }}'
+    default: '[ci] translation'
   pr_body:
     description: 'Body for pull requests'
     required: false
@@ -92,6 +92,12 @@ inputs:
       1. Review the translations for accuracy
       2. Test the changes in your development environment  
       3. Merge when ready to deploy translated content
+
+      ### Commit
+      ${{ github.event.head_commit.author.name || 'Unknown' }}
+      ${{ github.event.head_commit.author.email || 'unknown@example.com' }}
+      ${{ github.event.head_commit.author.date || 'Unknown date' }}
+      ${{ github.event.head_commit.message || 'No commit message available' }}
 
       ---
       *Generated automatically by GT Translate*

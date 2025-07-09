@@ -35,23 +35,8 @@ export async function run(): Promise<void> {
 
     // PR inputs
     const prBranch = core.getInput('pr_branch');
-    let prTitle = core.getInput('pr_title');
+    const prTitle = core.getInput('pr_title');
     const prBody = core.getInput('pr_body');
-
-    // Get commit message and truncate if needed
-    const commitMessage = github.context.payload.head_commit?.message || '';
-    const truncatedMessage =
-      commitMessage.length > 50
-        ? commitMessage.substring(0, 47) + '...'
-        : commitMessage;
-
-    // Replace placeholder in PR title with truncated commit message
-    if (prTitle.includes('${{ github.event.head_commit.message }}')) {
-      prTitle = prTitle.replace(
-        '${{ github.event.head_commit.message }}',
-        truncatedMessage
-      );
-    }
 
     // Set GT environment variables
     if (gtApiKey) {
