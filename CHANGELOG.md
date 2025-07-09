@@ -1,5 +1,11 @@
 # @generaltranslation/translate-action
 
+## 0.0.7
+
+### Patch Changes
+
+- [#12](https://github.com/generaltranslation/translate/pull/12) [`4becbb0`](https://github.com/generaltranslation/translate/commit/4becbb0cfc71d111cd0f40e90de70329824335e1) Thanks [@ErnestM1234](https://github.com/ErnestM1234)! - chore: bump version
+
 ## 0.0.6
 
 ### Patch Changes
