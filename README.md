@@ -31,7 +31,6 @@ jobs:
           gt_api_key: ${{ secrets.GT_API_KEY }}
           gt_project_id: ${{ secrets.GT_PROJECT_ID }}
           config: 'gt.config.json'
-          inline: true
           pr_branch: 'gt-translate/${{ github.ref_name }}'
 ```
 
