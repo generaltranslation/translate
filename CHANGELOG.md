@@ -1,5 +1,11 @@
 # @generaltranslation/translate-action
 
+## 0.0.9
+
+### Patch Changes
+
+- [#17](https://github.com/generaltranslation/translate/pull/17) [`cd407d6`](https://github.com/generaltranslation/translate/commit/cd407d65905f2baa73f2cf59fa0f1a5f588fe496) Thanks [@ErnestM1234](https://github.com/ErnestM1234)! - chore: bump versions
+
 ## 0.0.8
 
 ### Patch Changes
