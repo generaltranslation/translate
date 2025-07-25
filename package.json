@@ -21,8 +21,7 @@
     "@actions/core": "^1.11.1",
     "@actions/exec": "^1.1.1",
     "@actions/github": "^6.0.1",
-    "generaltranslation": "^7.1.4",
-    "gtx-cli": "^2.0.8"
+    "gtx-cli": "^2.0.9"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",
