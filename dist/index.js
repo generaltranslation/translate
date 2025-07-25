@@ -31878,20 +31878,24 @@ async function prExists(octokit, owner, repo, head) {
 async function createPR(githubToken, prBranch, prTitle, prBody) {
     // Check for changes using git status (both staged and unstaged)
     let hasChanges = false;
+    // Check for unstaged changes
     try {
-        // Check for unstaged changes
         await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)('git', ['diff', '--quiet']);
-        // Check for untracked files
-        await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)('git', [
-            'ls-files',
-            '--others',
-            '--exclude-standard',
-            '--error-unmatch',
-            '.',
-        ]);
     }
     catch {
         hasChanges = true;
+    }
+    // Check for untracked files (only if no changes found yet)
+    if (!hasChanges) {
+        try {
+            const { stdout } = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.getExecOutput)('git', ['ls-files', '--others', '--exclude-standard'], { silent: true });
+            if (stdout.trim()) {
+                hasChanges = true;
+            }
+        }
+        catch {
+            // If git ls-files fails, assume no untracked files
+        }
     }
     if (!hasChanges) {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info('No changes detected');
