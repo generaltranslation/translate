@@ -31744,6 +31744,7 @@ async function run() {
         const experimentalLocalizeStaticUrls = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('experimental_localize_static_urls');
         const experimentalHideDefaultLocale = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('experimental_hide_default_locale');
         const experimentalFlattenJsonFiles = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('experimental_flatten_json_files');
+        const experimentalLocalizeStaticImports = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('experimental_localize_static_imports');
         const githubToken = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('github_token');
         const version = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('version');
         // PR inputs
@@ -31800,6 +31801,8 @@ async function run() {
             args.push('--experimental-hide-default-locale');
         if (experimentalFlattenJsonFiles)
             args.push('--experimental-flatten-json-files');
+        if (experimentalLocalizeStaticImports)
+            args.push('--experimental-localize-static-imports');
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Running command: ${args.join(' ')}`);
         // Execute the command
         const code = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)(args[0], args.slice(1));
@@ -31878,20 +31881,24 @@ async function prExists(octokit, owner, repo, head) {
 async function createPR(githubToken, prBranch, prTitle, prBody) {
     // Check for changes using git status (both staged and unstaged)
     let hasChanges = false;
+    // Check for unstaged changes
     try {
-        // Check for unstaged changes
         await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)('git', ['diff', '--quiet']);
-        // Check for untracked files
-        await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)('git', [
-            'ls-files',
-            '--others',
-            '--exclude-standard',
-            '--error-unmatch',
-            '.',
-        ]);
     }
     catch {
         hasChanges = true;
+    }
+    // Check for untracked files (only if no changes found yet)
+    if (!hasChanges) {
+        try {
+            const { stdout } = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.getExecOutput)('git', ['ls-files', '--others', '--exclude-standard'], { silent: true });
+            if (stdout.trim()) {
+                hasChanges = true;
+            }
+        }
+        catch {
+            // If git ls-files fails, assume no untracked files
+        }
     }
     if (!hasChanges) {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info('No changes detected');
