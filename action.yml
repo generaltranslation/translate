@@ -60,6 +60,10 @@ inputs:
     description: 'Flatten json files into a single file'
     required: false
     default: 'false'
+  experimental_localize_static_imports:
+    description: 'Run script to localize all imports in static files'
+    required: false
+    default: 'false'
   github_token:
     description: 'GitHub token for creating pull requests'
     required: false

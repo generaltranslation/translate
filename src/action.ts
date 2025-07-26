@@ -30,6 +30,9 @@ export async function run(): Promise<void> {
     const experimentalFlattenJsonFiles = core.getBooleanInput(
       'experimental_flatten_json_files'
     );
+    const experimentalLocalizeStaticImports = core.getBooleanInput(
+      'experimental_localize_static_imports'
+    );
     const githubToken = core.getInput('github_token');
     const version = core.getInput('version');
 
@@ -78,6 +81,8 @@ export async function run(): Promise<void> {
       args.push('--experimental-hide-default-locale');
     if (experimentalFlattenJsonFiles)
       args.push('--experimental-flatten-json-files');
+    if (experimentalLocalizeStaticImports)
+      args.push('--experimental-localize-static-imports');
 
     core.info(`Running command: ${args.join(' ')}`);
 
