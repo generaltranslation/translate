@@ -60,6 +60,7 @@ jobs:
 | `pr_branch`                            | Branch name for pull requests                             | ❌       | `gt-translate/${{ github.ref_name }}` |
 | `pr_title`                             | Title for pull requests                                   | ❌       | `[ci] translation`                    |
 | `pr_body`                              | Body for pull requests                                    | ❌       | (see action.yml)                      |
+| `pr_auto_merge`                        | Enable to auto merge translation pull requests            | ❌       | `false`                               |
 
 ## Development
 
