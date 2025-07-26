@@ -1,5 +1,11 @@
 # @generaltranslation/translate-action
 
+## 0.0.12
+
+### Patch Changes
+
+- [#25](https://github.com/generaltranslation/translate/pull/25) [`687be60`](https://github.com/generaltranslation/translate/commit/687be609bf597dbceb820c077b2f9ec341107fbe) Thanks [@ErnestM1234](https://github.com/ErnestM1234)! - feat: add pr auto merge
+
 ## 0.0.11
 
 ### Patch Changes
