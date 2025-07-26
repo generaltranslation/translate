@@ -40,6 +40,7 @@ export async function run(): Promise<void> {
     const prBranch = core.getInput('pr_branch');
     const prTitle = core.getInput('pr_title');
     const prBody = core.getInput('pr_body');
+    const autoMerge = core.getBooleanInput('pr_auto_merge');
 
     // Set GT environment variables
     if (gtApiKey) {
@@ -94,7 +95,7 @@ export async function run(): Promise<void> {
       core.info('GT Translate action completed successfully');
     }
 
-    await createPR(githubToken, prBranch, prTitle, prBody);
+    await createPR(githubToken, prBranch, prTitle, prBody, autoMerge);
   } catch (error) {
     core.setFailed(`Action failed with error: ${error}`);
   }
@@ -170,7 +171,8 @@ async function createPR(
   githubToken: string,
   prBranch: string,
   prTitle: string,
-  prBody: string
+  prBody: string,
+  autoMerge: boolean = false
 ): Promise<void> {
   // Check for changes using git status (both staged and unstaged)
   let hasChanges = false;
@@ -250,6 +252,21 @@ async function createPR(
   });
 
   core.info(`Created PR: ${pr.html_url}`);
+
+  // Auto-merge if enabled
+  if (autoMerge) {
+    try {
+      await octokit.rest.pulls.merge({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        pull_number: pr.number,
+        merge_method: 'squash',
+      });
+      core.info(`Auto-merged PR #${pr.number}`);
+    } catch (error) {
+      core.warning(`Failed to auto-merge PR #${pr.number}: ${error}`);
+    }
+  }
 }
 
 run();
