@@ -80,6 +80,10 @@ inputs:
     description: 'Title for pull requests'
     required: false
     default: '[ci] translation'
+  pr_auto_merge:
+    description: 'Auto-merge pull requests'
+    required: false
+    default: 'false'
   pr_body:
     description: 'Body for pull requests'
     required: false
