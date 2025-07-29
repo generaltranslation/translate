@@ -1,6 +1,6 @@
 {
   "name": "@generaltranslation/translate-action",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "GitHub Action for continuous translation",
   "main": "dist/index.js",
   "type": "module",
