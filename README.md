@@ -1,4 +1,14 @@
+<div align="center">
+  <a href="https://generaltranslation.com" target="_blank">
+    <img src="./assets/gt-logo-light.svg" alt="General Translation, Inc." width="64" height="64">
+  </a>
+</div>
+
+<div align="center">
+
 # GT Translate Action
+
+</div>
 
 GitHub Action for running gtx-cli translate automation on your project.
 Each time you merge a PR into main, a new PR will be generate with new translations.
