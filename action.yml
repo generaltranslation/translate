@@ -6,6 +6,9 @@ branding:
   color: 'blue'
 
 inputs:
+  app_directory:
+    description: 'Relative path to the directory containing the app source code'
+    required: false
   gt_api_key:
     description: 'API key for General Translation cloud service'
     required: true

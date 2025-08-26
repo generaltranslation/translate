@@ -31713,6 +31713,7 @@ module.exports = parseParams
 /************************************************************************/
 var __webpack_exports__ = {};
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   E: () => (/* binding */ CLI_VERSION),
 /* harmony export */   e: () => (/* binding */ run)
 /* harmony export */ });
 /* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(7484);
@@ -31724,6 +31725,7 @@ var __webpack_exports__ = {};
 
 
 
+const CLI_VERSION = '2';
 async function run() {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info('GT Translate action started');
     try {
@@ -31741,6 +31743,7 @@ async function run() {
         const ignoreErrors = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('ignore_errors');
         const dryRun = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('dry_run');
         const timeout = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('timeout');
+        const appDirectory = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('app_directory');
         const experimentalLocalizeStaticUrls = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('experimental_localize_static_urls');
         const experimentalHideDefaultLocale = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('experimental_hide_default_locale');
         const experimentalFlattenJsonFiles = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('experimental_flatten_json_files');
@@ -31764,9 +31767,9 @@ async function run() {
             'npm',
             'install',
             '-g',
-            `gtx-cli@${version || 'latest'}`,
+            `gtx-cli@${version || CLI_VERSION}`,
         ];
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Installing gtx-cli@${version || 'latest'}...`);
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Installing gtx-cli@${version || CLI_VERSION}...`);
         await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)(installArgs[0], installArgs.slice(1));
         // Then run the gtx-cli translate command
         const args = ['gtx-cli', 'translate'];
@@ -31806,7 +31809,9 @@ async function run() {
             args.push('--experimental-localize-static-imports');
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Running command: ${args.join(' ')}`);
         // Execute the command
-        const code = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)(args[0], args.slice(1));
+        const code = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)(args[0], args.slice(1), {
+            ...(appDirectory && { cwd: appDirectory }),
+        });
         if (code !== 0) {
             throw new Error(`GT Translate failed with code ${code}`);
         }
@@ -31956,7 +31961,8 @@ async function createPR(githubToken, prBranch, prTitle, prBody, autoMerge = fals
 }
 run();
 
+var __webpack_exports__CLI_VERSION = __webpack_exports__.E;
 var __webpack_exports__run = __webpack_exports__.e;
-export { __webpack_exports__run as run };
+export { __webpack_exports__CLI_VERSION as CLI_VERSION, __webpack_exports__run as run };
 
 //# sourceMappingURL=index.js.map

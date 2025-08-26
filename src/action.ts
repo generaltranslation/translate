@@ -4,6 +4,8 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { exec, getExecOutput } from '@actions/exec';
 
+export const CLI_VERSION = '2';
+
 export async function run(): Promise<void> {
   core.info('GT Translate action started');
   try {
@@ -21,6 +23,7 @@ export async function run(): Promise<void> {
     const ignoreErrors = core.getBooleanInput('ignore_errors');
     const dryRun = core.getBooleanInput('dry_run');
     const timeout = core.getInput('timeout');
+    const appDirectory = core.getInput('app_directory');
     const experimentalLocalizeStaticUrls = core.getBooleanInput(
       'experimental_localize_static_urls'
     );
@@ -55,9 +58,9 @@ export async function run(): Promise<void> {
       'npm',
       'install',
       '-g',
-      `gtx-cli@${version || 'latest'}`,
+      `gtx-cli@${version || CLI_VERSION}`,
     ];
-    core.info(`Installing gtx-cli@${version || 'latest'}...`);
+    core.info(`Installing gtx-cli@${version || CLI_VERSION}...`);
     await exec(installArgs[0], installArgs.slice(1));
 
     // Then run the gtx-cli translate command
@@ -88,7 +91,9 @@ export async function run(): Promise<void> {
     core.info(`Running command: ${args.join(' ')}`);
 
     // Execute the command
-    const code = await exec(args[0], args.slice(1));
+    const code = await exec(args[0], args.slice(1), {
+      ...(appDirectory && { cwd: appDirectory }),
+    });
     if (code !== 0) {
       throw new Error(`GT Translate failed with code ${code}`);
     } else {

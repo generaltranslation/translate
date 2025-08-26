@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as core from '@actions/core';
 import { exec } from '@actions/exec';
+import { CLI_VERSION } from '../src/action';
 
 vi.mock('@actions/core');
 vi.mock('@actions/exec');
@@ -49,13 +50,13 @@ describe('GitHub Action', () => {
     expect(mockExec).toHaveBeenCalledWith('npm', [
       'install',
       '-g',
-      'gtx-cli@latest',
+      `gtx-cli@${CLI_VERSION}`,
     ]);
-    expect(mockExec).toHaveBeenCalledWith('gtx-cli', [
-      'translate',
-      '--api-key',
-      'test-gt-api-key',
-    ]);
+    expect(mockExec).toHaveBeenCalledWith(
+      'gtx-cli',
+      ['translate', '--api-key', 'test-gt-api-key'],
+      {}
+    );
   });
 
   it('should add config flag when config is provided', async () => {
@@ -68,13 +69,17 @@ describe('GitHub Action', () => {
     const { run } = await import('../src/action');
     await run();
 
-    expect(mockExec).toHaveBeenCalledWith('gtx-cli', [
-      'translate',
-      '--config',
-      'custom.config.json',
-      '--api-key',
-      'test-gt-api-key',
-    ]);
+    expect(mockExec).toHaveBeenCalledWith(
+      'gtx-cli',
+      [
+        'translate',
+        '--config',
+        'custom.config.json',
+        '--api-key',
+        'test-gt-api-key',
+      ],
+      {}
+    );
   });
 
   it('should add inline flag when inline is true', async () => {
@@ -90,12 +95,11 @@ describe('GitHub Action', () => {
     const { run } = await import('../src/action');
     await run();
 
-    expect(mockExec).toHaveBeenCalledWith('gtx-cli', [
-      'translate',
-      '--api-key',
-      'test-gt-api-key',
-      '--inline',
-    ]);
+    expect(mockExec).toHaveBeenCalledWith(
+      'gtx-cli',
+      ['translate', '--api-key', 'test-gt-api-key', '--inline'],
+      {}
+    );
   });
 
   it('should add locales when provided', async () => {
@@ -108,13 +112,27 @@ describe('GitHub Action', () => {
     const { run } = await import('../src/action');
     await run();
 
-    expect(mockExec).toHaveBeenCalledWith('gtx-cli', [
-      'translate',
-      '--api-key',
-      'test-gt-api-key',
-      '--locales',
-      'en fr es',
-    ]);
+    expect(mockExec).toHaveBeenCalledWith(
+      'gtx-cli',
+      ['translate', '--api-key', 'test-gt-api-key', '--locales', 'en fr es'],
+      {}
+    );
+  });
+  it('should run from app directory when provided', async () => {
+    mockCore.getInput.mockImplementation((name) => {
+      if (name === 'gt_api_key') return 'test-gt-api-key';
+      if (name === 'app_directory') return 'app';
+      return '';
+    });
+
+    const { run } = await import('../src/action');
+    await run();
+
+    expect(mockExec).toHaveBeenCalledWith(
+      'gtx-cli',
+      ['translate', '--api-key', 'test-gt-api-key'],
+      { cwd: 'app' }
+    );
   });
 
   it('should handle errors and set failed status', async () => {
