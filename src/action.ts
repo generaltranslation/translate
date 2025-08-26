@@ -21,6 +21,7 @@ export async function run(): Promise<void> {
     const ignoreErrors = core.getBooleanInput('ignore_errors');
     const dryRun = core.getBooleanInput('dry_run');
     const timeout = core.getInput('timeout');
+    const appDirectory = core.getInput('app_directory');
     const experimentalLocalizeStaticUrls = core.getBooleanInput(
       'experimental_localize_static_urls'
     );
@@ -88,7 +89,9 @@ export async function run(): Promise<void> {
     core.info(`Running command: ${args.join(' ')}`);
 
     // Execute the command
-    const code = await exec(args[0], args.slice(1));
+    const code = await exec(args[0], args.slice(1), {
+      ...(appDirectory && { cwd: appDirectory }),
+    });
     if (code !== 0) {
       throw new Error(`GT Translate failed with code ${code}`);
     } else {
