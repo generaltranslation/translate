@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as core from '@actions/core';
 import { exec } from '@actions/exec';
+import { CLI_VERSION } from '../src/action';
 
 vi.mock('@actions/core');
 vi.mock('@actions/exec');
@@ -49,7 +50,7 @@ describe('GitHub Action', () => {
     expect(mockExec).toHaveBeenCalledWith('npm', [
       'install',
       '-g',
-      'gtx-cli@latest',
+      `gtx-cli@${CLI_VERSION}`,
     ]);
     expect(mockExec).toHaveBeenCalledWith(
       'gtx-cli',
