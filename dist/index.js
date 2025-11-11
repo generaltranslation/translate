@@ -31732,6 +31732,13 @@ async function run() {
         // Get inputs
         const gtApiKey = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('gt_api_key');
         const gtProjectId = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('gt_project_id');
+        // Mask secrets in logs
+        if (gtApiKey) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setSecret(gtApiKey);
+        }
+        if (gtProjectId) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setSecret(gtProjectId);
+        }
         const config = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('config');
         const versionId = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('version_id');
         const tsconfig = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('tsconfig');
@@ -31775,10 +31782,8 @@ async function run() {
         const args = ['gtx-cli', 'translate'];
         if (config)
             args.push('--config', config);
-        if (gtApiKey)
-            args.push('--api-key', gtApiKey);
-        if (gtProjectId)
-            args.push('--project-id', gtProjectId);
+        // Note: API key and project ID are passed via environment variables (GT_API_KEY, GT_PROJECT_ID)
+        // to avoid exposing them in command-line arguments or process lists
         if (versionId)
             args.push('--version-id', versionId);
         if (tsconfig)
@@ -31807,7 +31812,8 @@ async function run() {
             args.push('--experimental-flatten-json-files');
         if (experimentalLocalizeStaticImports)
             args.push('--experimental-localize-static-imports');
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Running command: ${args.join(' ')}`);
+        // Log command without exposing sensitive information
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Running command: gtx-cli translate`);
         // Execute the command
         const code = await (0,_actions_exec__WEBPACK_IMPORTED_MODULE_2__.exec)(args[0], args.slice(1), {
             ...(appDirectory && { cwd: appDirectory }),

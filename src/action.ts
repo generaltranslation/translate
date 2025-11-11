@@ -12,6 +12,14 @@ export async function run(): Promise<void> {
     // Get inputs
     const gtApiKey = core.getInput('gt_api_key');
     const gtProjectId = core.getInput('gt_project_id');
+
+    // Mask secrets in logs
+    if (gtApiKey) {
+      core.setSecret(gtApiKey);
+    }
+    if (gtProjectId) {
+      core.setSecret(gtProjectId);
+    }
     const config = core.getInput('config');
     const versionId = core.getInput('version_id');
     const tsconfig = core.getInput('tsconfig');
@@ -67,8 +75,8 @@ export async function run(): Promise<void> {
     const args = ['gtx-cli', 'translate'];
 
     if (config) args.push('--config', config);
-    if (gtApiKey) args.push('--api-key', gtApiKey);
-    if (gtProjectId) args.push('--project-id', gtProjectId);
+    // Note: API key and project ID are passed via environment variables (GT_API_KEY, GT_PROJECT_ID)
+    // to avoid exposing them in command-line arguments or process lists
     if (versionId) args.push('--version-id', versionId);
     if (tsconfig) args.push('--tsconfig', tsconfig);
     if (dictionary) args.push('--dictionary', dictionary);
@@ -88,7 +96,8 @@ export async function run(): Promise<void> {
     if (experimentalLocalizeStaticImports)
       args.push('--experimental-localize-static-imports');
 
-    core.info(`Running command: ${args.join(' ')}`);
+    // Log command without exposing sensitive information
+    core.info(`Running command: gtx-cli translate`);
 
     // Execute the command
     const code = await exec(args[0], args.slice(1), {
