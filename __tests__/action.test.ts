@@ -52,11 +52,12 @@ describe('GitHub Action', () => {
       '-g',
       `gtx-cli@${CLI_VERSION}`,
     ]);
-    expect(mockExec).toHaveBeenCalledWith(
-      'gtx-cli',
-      ['translate', '--api-key', 'test-gt-api-key'],
-      {}
+    expect(mockExec).toHaveBeenCalledWith('gtx-cli', ['translate'], {});
+    expect(mockCore.exportVariable).toHaveBeenCalledWith(
+      'GT_API_KEY',
+      'test-gt-api-key'
     );
+    expect(mockCore.setSecret).toHaveBeenCalledWith('test-gt-api-key');
   });
 
   it('should add config flag when config is provided', async () => {
@@ -71,14 +72,13 @@ describe('GitHub Action', () => {
 
     expect(mockExec).toHaveBeenCalledWith(
       'gtx-cli',
-      [
-        'translate',
-        '--config',
-        'custom.config.json',
-        '--api-key',
-        'test-gt-api-key',
-      ],
+      ['translate', '--config', 'custom.config.json'],
       {}
+    );
+    expect(mockCore.setSecret).toHaveBeenCalledWith('test-gt-api-key');
+    expect(mockCore.exportVariable).toHaveBeenCalledWith(
+      'GT_API_KEY',
+      'test-gt-api-key'
     );
   });
 
@@ -97,8 +97,13 @@ describe('GitHub Action', () => {
 
     expect(mockExec).toHaveBeenCalledWith(
       'gtx-cli',
-      ['translate', '--api-key', 'test-gt-api-key', '--inline'],
+      ['translate', '--inline'],
       {}
+    );
+    expect(mockCore.setSecret).toHaveBeenCalledWith('test-gt-api-key');
+    expect(mockCore.exportVariable).toHaveBeenCalledWith(
+      'GT_API_KEY',
+      'test-gt-api-key'
     );
   });
 
@@ -114,8 +119,13 @@ describe('GitHub Action', () => {
 
     expect(mockExec).toHaveBeenCalledWith(
       'gtx-cli',
-      ['translate', '--api-key', 'test-gt-api-key', '--locales', 'en fr es'],
+      ['translate', '--locales', 'en fr es'],
       {}
+    );
+    expect(mockCore.setSecret).toHaveBeenCalledWith('test-gt-api-key');
+    expect(mockCore.exportVariable).toHaveBeenCalledWith(
+      'GT_API_KEY',
+      'test-gt-api-key'
     );
   });
   it('should run from app directory when provided', async () => {
@@ -128,10 +138,13 @@ describe('GitHub Action', () => {
     const { run } = await import('../src/action');
     await run();
 
-    expect(mockExec).toHaveBeenCalledWith(
-      'gtx-cli',
-      ['translate', '--api-key', 'test-gt-api-key'],
-      { cwd: 'app' }
+    expect(mockExec).toHaveBeenCalledWith('gtx-cli', ['translate'], {
+      cwd: 'app',
+    });
+    expect(mockCore.setSecret).toHaveBeenCalledWith('test-gt-api-key');
+    expect(mockCore.exportVariable).toHaveBeenCalledWith(
+      'GT_API_KEY',
+      'test-gt-api-key'
     );
   });
 
