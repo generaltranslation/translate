@@ -2,4 +2,4 @@
 '@generaltranslation/translate-action': patch
 ---
 
-Add optional app_directory
+Bump CLI version & mask secrets in logs
