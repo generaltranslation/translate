@@ -1,5 +1,11 @@
 # @generaltranslation/translate-action
 
+## 0.0.15
+
+### Patch Changes
+
+- [#36](https://github.com/generaltranslation/translate/pull/36) [`be1028a`](https://github.com/generaltranslation/translate/commit/be1028af3ed06204bbd83dc1bfe8abcfef840b4e) Thanks [@brian-lou](https://github.com/brian-lou)! - Add optional app_directory
+
 ## 0.0.14
 
 ### Patch Changes

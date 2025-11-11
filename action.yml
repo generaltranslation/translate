@@ -91,9 +91,9 @@ inputs:
     description: 'Body for pull requests'
     required: false
     default: |
-      ## 🌍 GT Translate Update
+      ## 🌍 General Translation Update
 
-      This is an **automated pull request** created by GT Translate.
+      This is an **automated pull request** created by [General Translation](https://generaltranslation.com/).
 
       ### What's included
       - Translation updates based on your latest changes
