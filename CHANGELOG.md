@@ -1,5 +1,13 @@
 # @generaltranslation/translate-action
 
+## 0.0.16
+
+### Patch Changes
+
+- [#38](https://github.com/generaltranslation/translate/pull/38) [`6f3f5ae`](https://github.com/generaltranslation/translate/commit/6f3f5aef6912cc405350221578754e572d7698cb) Thanks [@fernando-aviles](https://github.com/fernando-aviles)! - Updating gtx-cli to @latest
+
+- [#40](https://github.com/generaltranslation/translate/pull/40) [`44cd309`](https://github.com/generaltranslation/translate/commit/44cd309baac538c36e71940bfc404594470c7eda) Thanks [@brian-lou](https://github.com/brian-lou)! - Bump CLI version & mask secrets in logs
+
 ## 0.0.15
 
 ### Patch Changes
