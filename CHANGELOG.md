@@ -1,5 +1,11 @@
 # @generaltranslation/translate-action
 
+## 0.0.18
+
+### Patch Changes
+
+- [#44](https://github.com/generaltranslation/translate/pull/44) [`6b00ba1`](https://github.com/generaltranslation/translate/commit/6b00ba139d97eda73075bc5839d1b6d2d7eba0e5) Thanks [@ErnestM1234](https://github.com/ErnestM1234)! - Updating gtx-cli to @latest
+
 ## 0.0.17
 
 ### Patch Changes
